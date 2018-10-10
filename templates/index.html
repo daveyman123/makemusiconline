@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CodeMirror</title>
+		<link rel="stylesheet" type="text/css" href="plugin/codemirror/lib/codemirror.css">
+	</head>
+	<h3>Your first sound</h3>
+Type in:
+<p>
+play 60
+</p>
+You should hear a simple bell-like pling sound! Remember to plug your headphones or a speaker into the RPi!
+
+Try changing 60 to other numbers. What happens if you choose a number too low or high? You might be interested to know that these numbers are MIDI numbers. See the following link for how MIDI relates to a piano and more standard note names: http://www.phys.unsw.edu.au/jw/notes.html
+
+<h3>Your first piece</h3>
+The next command to learn is sleep which also takes a number as a parameter. In this case the number doesn't represent pitch, it represents time:
+<br?
+sleep 1
+<br>
+This will force the program to pause for one second. You can use sleep to add delays in your composition allowing you to create a melody. Try writing a bunch of play and sleep commands such as:
+<br>
+<p>play 60</p>
+<p>sleep 0.25</p>
+<p>play 62</p>
+<p>sleep 0.5</p>
+<p>play 66</p>
+Go ahead and start writing your own pieces!
+<br>
+	<body>
+		
+		<!-- javascript -->
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="plugin/codemirror/lib/codemirror.js"></script>
+		<script type="text/javascript" src="js/default.js"></script>
+	</body>
+
+
+	<textarea class="codemirror-textarea" rows="40" cols="100" name="song" id="song">{{song}}</textarea>
+	<br>
+	
+	
+  
+	
+	<button id ="button1" name="button">submit</button>
+	
+
+<audio controls autoplay>
+<source src="http://musictest.ddns.net:8000/out.mp3" type="audio/mp3"/>
+</audio>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+
+$("#button1").click(function (e) {
+	
+    e.preventDefault();
+    var value = $("#song").val();
+    
+    $.ajax({
+        type: "POST",
+        url: "/parse_data",
+        data: JSON.stringify({ value } ),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            alert(JSON.stringify(data));
+        }
+    });
+
+});
+
+</script>
+</html>
+
+
