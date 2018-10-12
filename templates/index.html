@@ -10,26 +10,7 @@
                 <script type="text/javascript" src="js/default.js"></script>
                 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
                 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
 
-        var socket = io.connect();
-
-        // the socket.io documentation recommends sending an explicit package upon connection
-        socket.on('connect', function() {
-            socket.emit('connect', {data: 'I\'m connected!'});
-        });
-
-        $('#song').on('change keyup paste', function(event) {
-            alert("blah");
-	    socket.emit('value changed',{data: $('#song').val()});
-            return false;
-           
-           
-        });
-
-    });
-</script>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
@@ -72,7 +53,7 @@ end
 </body>
 
 <div style="float:left;">
-	<textarea rows="40" cols="100" name="song" id="song">{{song}}</textarea><br>
+	<textarea class="codemirror-textarea" rows="40" cols="100" name="song" id="song">{{song}}</textarea><br>
         <button id ="button1" name="button">submit</button>
 
 <audio controls autoplay>

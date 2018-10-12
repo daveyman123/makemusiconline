@@ -17,7 +17,7 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "music.db"))
 
 app = Flask(__name__)
-#socketio = SocketIO(app)
+socketio = SocketIO(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 db = SQLAlchemy(app)
@@ -42,15 +42,16 @@ def sendCmd(cmd,par = None):
 c = OSC.OSCClient()
 c.connect(('127.0.0.1', 4557))   # connect to SuperCollider
 @app.route('/uploader', methods = ['GET', 'POST'])
+
 def upload_file():
    if request.method == 'POST':
       f = request.files['file']
       f.save(secure_filename(f.filename))
       return 'file uploaded successfully to /home/pi/test/ folder'
 
-#@socketio.on('value changed')
-#def value_changed(message):
-#    print(message)
+@socketio.on('value changed')
+def value_changed(message):
+    print(message)
 
 
 @app.route('/')
@@ -86,7 +87,7 @@ def my_form_post():
     #song = json.dumps(song)
     song_query = SongClass.query.all()
     if song_query:
-        song = str(song_query[-1])
+        song = str(song_query[0])
     else:
         song=" "
     if song_query[-2]:
@@ -102,4 +103,4 @@ def my_form_post():
 	
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0',threaded=True,debug=True, port = 8080)
+   socketio.run(app, host='0.0.0.0', port = 5002)
