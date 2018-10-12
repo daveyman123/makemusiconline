@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>CodeMirror</title>
+		
+                <!-- javascript -->
+                <script type="text/javascript" src="js/jquery.min.js"></script>
+                <script type="text/javascript" src="plugin/codemirror/lib/codem
+                
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+	</head>
+	<h3 style="color: #f51796;">Your first sound</h3>
+Type in (the stuff after the hashtag is a comment, it doesnt get used by the program):
+<p>
+play 60 #this is case sensitive
+</p>
+You should hear a simple bell-like ping sound! Remember to plug your headphones or a speaker into the RPi!
+
+Try changing 60 to other numbers. What happens if you choose a number too low or high? You might be interested to know that these numbers are MIDI numbers. See the following link for how MIDI relates to a piano and more standard note names: http://www.phys.unsw.edu.au/jw/notes.html
+
+<h3>Your first piece (copy and paste it into the text field and hit submit)</h3>
+The next command to learn is sleep which also takes a number as a parameter. In this case the number doesn't represent pitch, it represents time:
+<br>
+<p>sleep 1</p>
+<br>
+This will force the program to pause for one second. You can use sleep to add delays in your composition allowing you to create a melody. Try writing a bunch of play and sleep commands such as:
+<br>
+This also introduces a loop
+<br>
+<textarea>
+5.times do
+  play 60
+  sleep 0.25
+  play 62
+  sleep 0.5
+  play 66
+  sleep 0.5
+end
+</textarea>
+
+<p>copy and paste whats above in to the text box below and hit submit</p>
+<p>Go ahead and start writing your own pieces!</p>
+
+<br>
+	<body>
+		
+</body>
+
+<div style="float:left;">
+	<textarea class="codemirror-textarea" rows="40" cols="100" name="song" id="song">{{song}}</textarea><br>
+        <button id ="button1" name="button">submit</button>
+
+<audio controls autoplay>
+<source src="http://musictest.ddns.net:8000/out.mp3" type="audio/mp3"/>
+</audio>
+
+        <p> give it a minute for the audio to catch up</p>
+
+</div>
+
+<div style="float:left;">
+<label for= "song2">below is a previous submission</label>
+<br>	
+<textarea class= "codemirror-textarea" rows="40" cols="100" name="song2" id="song2">{{song2}}</textarea>
+
+	</div>
+	
+	
+  
+
+<h4>useful links</h4>
+<a href="https://www.cl.cam.ac.uk/projects/raspberrypi/sonicpi/media/sonic-pi-cheatsheet.pdf">sonic-pi cheatsheet</a>
+<br>
+<a href="https://github.com/DavidsFiddle/Sonic-Pi-Code-Bits">sample music to use</a>
+<br>
+<a href="https://getsongbpm.com/tools/audio"> get the BPM of a song/sample</a>
+<br>
+<br>
+<br>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+
+$("#button1").click(function (e) {
+	
+    e.preventDefault();
+    var value = $("#song").val();
+    
+    $.ajax({
+        type: "POST",
+        url: "/parse_data",
+        data: JSON.stringify({ value } ),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            alert(JSON.stringify(data));
+        }
+    });
+
+});
+
+</script>
+<h2> upload a sample</h2>
+<form action = "/uploader" method = "POST" 
+         enctype = "multipart/form-data">
+         <input type = "file" name = "file" />
+         <input type = "submit"/>
+      </form>
+</html>
+
+
