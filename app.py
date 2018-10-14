@@ -17,7 +17,7 @@ project_dir = os.path.dirname(os.path.abspath(__file__))
 database_file = "sqlite:///{}".format(os.path.join(project_dir, "music.db"))
 
 app = Flask(__name__)
-#socketio = SocketIO(app)
+socketio = SocketIO(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 
 db = SQLAlchemy(app)
@@ -48,9 +48,7 @@ def upload_file():
       f.save(secure_filename(f.filename))
       return 'file uploaded successfully to /home/pi/test/ folder'
 
-#@socketio.on('value changed')
-#def value_changed(message):
-#    print(message)
+	  
 
 
 @app.route('/')
@@ -68,6 +66,30 @@ def my_form():
 	song2 = " "
     return render_template('index.html', song=song, song2=song2)
  #   return render_template('index.html')
+ 
+
+@socketio.on('value_changed', namespace='/test')
+def value_changed(message):
+    print(message)
+ 
+
+@socketio.on('my event', namespace='/test')
+def test_message(message):
+    emit('my response', {'data': message['data']})
+
+@socketio.on('my broadcast event', namespace='/test')
+def test_message(message):
+    emit('my response', {'data': message['data']}, broadcast=True)
+
+@socketio.on('connect', namespace='/test')
+def test_connect():
+    emit('my response', {'data': 'Connected'})
+
+@socketio.on('disconnect', namespace='/test')
+def test_disconnect():
+    print('Client disconnected')
+ 
+ 
 @app.route('/parse_data', methods=['POST'])
 def my_form_post():
     c = OSC.OSCClient()
@@ -102,4 +124,4 @@ def my_form_post():
 	
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0',threaded=True,debug=True, port = 8080)
+   socketio.run(app, host='0.0.0.0',debug=True, port = 8001)
