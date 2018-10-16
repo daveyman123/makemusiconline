@@ -1,64 +1,80 @@
+{% extends "base.html" %}
 
+
+
+{% block content %}
 <!DOCTYPE html>
 <html>
 	<head>
+  <style>
+    html { height: 100%; }
+    body { margin: 0; height: 100%; position: relative; }
+    /* Height / width / positioning can be customized for your use case.
+       For demo purposes, we make firepad fill the entire browser. */
+    #firepad {
+      width: 50%;
+      height: 100%;
+      
+}
+    }
+  </style>
+		<title>makemusiconline</title>
 
-		<title>CodeMirror</title>
-		
-                <script type="text/javascript" src="js/jquery.min.js"></script>
-                <script type="text/javascript" src="plugin/codemirror/lib/codemirror.js"></script>
+
+   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+          
     <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
-<script type="text/javascript" charset="utf-8">
-$(document).ready(function(){
-	namespace = '/test';
+    <!-- <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script> -->
 
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
-    socket.on('my response', function(msg) {
-        $('#log').append('<p>Received: ' + msg.data + '</p>');
-    });
-    $('#button1').click(function(event) {
-        socket.emit('value_changed', {data: $('#song').val()});
-		<!-- e.preventDefault(); -->
-		<!-- var value = $("#song").val(); -->
-		
-		<!-- $.ajax({ -->
-			<!-- type: "POST", -->
-			<!-- url: "/parse_data", -->
-			<!-- data: JSON.stringify({ value } ), -->
-			<!-- contentType: "application/json; charset=utf-8", -->
-			<!-- dataType: "json", -->
-			<!-- success: function (data) { -->
-				<!-- alert(JSON.stringify(data)); -->
-			<!-- } -->
-		<!-- }); -->
-        return false;
-    });
-   
-});
-</script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
-	</head>
-	<h3 style="color: #f51796;">Your first sound</h3>
-Type in (the stuff after the hashtag is a comment, it doesnt get used by the program):
-<p>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+
+  <!-- CodeMirror -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.17.0/codemirror.css"/>
+
+  <!-- Firepad -->
+  <link rel="stylesheet" href="https://cdn.firebase.com/libs/firepad/1.5.0/firepad.css" />
+  <script src="https://cdn.firebase.com/libs/firepad/1.5.0/firepad.min.js"></script>
+</head>
+	
+
+<div class="container-fluid">	
+
+<title>Hello from Flask</title>
+{% if username %}
+  <h1>Hello {{ username }}!</h1>
+{% else %}
+  <h1>Hello, World!</h1>
+{% endif %}
+
+	
+<h3 style="color: #f51796;">Your first sound</h3>
+<p>Type in </p>
+<p class="bg-primary">
 play 60 #this is case sensitive
 </p>
-You should hear a simple bell-like ping sound! Remember to plug your headphones or a speaker into the RPi!
+<p>You should hear a simple bell-like ping sound! Remember to plug your headphones or a speaker into the RPi!</p>
 
 Try changing 60 to other numbers. What happens if you choose a number too low or high? You might be interested to know that these numbers are MIDI numbers. See the following link for how MIDI relates to a piano and more standard note names: http://www.phys.unsw.edu.au/jw/notes.html
 
 <h3>Your first piece (copy and paste it into the text field and hit submit)</h3>
 The next command to learn is sleep which also takes a number as a parameter. In this case the number doesn't represent pitch, it represents time:
 <br>
-<p>sleep 1</p>
+<p class="bg-primary">sleep 1</p>
 <br>
 This will force the program to pause for one second. You can use sleep to add delays in your composition allowing you to create a melody. Try writing a bunch of play and sleep commands such as:
 <br>
 This also introduces a loop
 <br>
-<textarea>
+<textarea class="bg-primary" rows="8">
 5.times do
   play 60
   sleep 0.25
@@ -71,33 +87,117 @@ end
 
 <p>copy and paste whats above in to the text box below and hit submit</p>
 <p>Go ahead and start writing your own pieces!</p>
-
+</div>
 <br>
-	<body>
+<body onload="init()">
+
+  <div class="textarea-class" id="firepad" align="left">
+<form action="/stop" method="post">
+      <button id ="button2" type="submit" class="btn btn-danger" name="button" align="right">Stop</button>
+ </form>
+   <button id ="button1" type="submit" class="btn btn-success" name="button">Submit and Play</button>
+   <p id='user'> submitted by: {{user}} </p>
+   
+   
+  </div><br>
+<br>
+<div class="container-fluid">  
+	<script>
+	
+    function init() {
+      //// Initialize Firebase.
+      //// TODO: replace with your Firebase project configuration.
+    // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCcBK7OdLjsnM78m2gur-BcsC6LRVVqNQk",
+		authDomain: "blahblahblah-208321.firebaseapp.com",
+		databaseURL: "https://blahblahblah-208321.firebaseio.com",
+		projectId: "blahblahblah-208321",
+		storageBucket: "blahblahblah-208321.appspot.com",
+		messagingSenderId: "616371390701"
+	  };
+  
+
+      firebase.initializeApp(config);
+      //// Get Firebase Database reference.
+      var firepadRef = getExampleRef();
+      //// Create CodeMirror (with line numbers and the JavaScript mode).
+      var codeMirror = CodeMirror(document.getElementById('firepad'), {
+        lineNumbers: true,
+        mode: 'javascript',
+		id: "song",
+		name: "song"
 		
+      });
+      //// Create Firepad.
+      var firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {
+        id: "song"
+      });
+	  
+    }
+	
+    // Helper to get hash from end of URL or generate a random one.
+    function getExampleRef() {
+      var ref = firebase.database().ref();
+      
+      if (typeof console !== 'undefined') {
+        console.log('Firebase data: ', ref.toString());
+      }
+      return ref;
+    }
+  </script>
+  <script type="text/javascript" charset="utf-8">
+$(document).ready(function(){
+	<!-- namespace = '/test'; -->
+
+    <!-- var socket = io.connect('http://' + document.domain + ':' + location.port + '/test'); -->
+    <!-- socket.on('my response', function(msg) { -->
+        <!-- $('#log').append('<p>Received: ' + msg.data + '</p>'); -->
+    <!-- }); -->
+    $('#button1').click(function(event) {
+        <!-- socket.emit('value_changed', {data: $('#song').val()}); -->
+		<!-- e.preventDefault(); -->
+		var editor = $('.CodeMirror')[0].CodeMirror;
+		var value = editor.getValue();
+		alert ("There is a lot of latency be patient :^)");
+		$.ajax({
+			type: "POST",
+			url: "/parse_data",
+			data: JSON.stringify({ value } ),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (data) {
+				alert(JSON.stringify(data));
+                $('#user').html("submitted by: " + data.var1);
+                
+			}
+		});
+        return false;
+    });
+   
+});
+</script>	
+<br>
+<br>
 </body>
 
-<div style="float:left;">
-	<textarea class="codemirror-textarea" rows="40" cols="100" name="song" id="song">{{song}}</textarea><br>
-        <button id ="button1" name="button">submit</button>
-
-<audio controls autoplay>
+       
+<br>
+<br>
+<audio controls autoplay id="audio">
 <source src="http://musictest.ddns.net:8000/out.mp3" type="audio/mp3"/>
 </audio>
+<script>
+  var audio = document.getElementById("audio");
+  audio.volume = 0.2;
+</script>
+        <p> Give it a minute for the audio to catch up.</p>
 
-        <p> give it a minute for the audio to catch up</p>
 
-</div>
+previous submissions
 
-
-
-<div style="float:left;">
-<label for= "song2">below is a previous submission</label>
-<br>	
-<textarea class= "codemirror-textarea" rows="40" cols="100" name="song2" id="song2">{{song2}}</textarea>
-
-	</div>
-	
+<p id='user2'> submitted by: {{user2}} </p>
+<textarea class="codemirror-textarea" rows="40" cols="100" name="song" id="song">{{song}}</textarea>
 	
   
 
@@ -119,7 +219,8 @@ end
       </form>
 
 </body>
-</html>
+</div>
 </html>
 
+{% endblock %}   
 

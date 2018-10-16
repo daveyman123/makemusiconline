@@ -1,12 +1,3 @@
-body {
-    background-color: yellow;
-}
-
-.firepad {
-  width: 700px;
-  height: 450px;
-  background-color: #f62; /* dark orange background */
-}
 .firepad-userlist {
   /* default height */
   height: 400px;

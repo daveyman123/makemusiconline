@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<!DOCTYPE html>
+
+
+
+<html>
+
+    <head>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+
+<html>
+  <head>
+
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+  </head>
+<body id="LoginForm">
+<div class="container">
+<h1 class="form-heading">Register to make music</h1>
+<div class="login-form">
+<div class="main-div">
+
+        <style>
+
+           .error { color: red; }
+
+        </style>
+
+        <title>User Signup</title>
+
+    </head>
+
+    <body>
+
+
+
+    <h2><u> Sign-up </u></h2>
+
+       
+
+    <form action= '/register' method="post">
+
+            <table>
+
+                <tbody><tr>
+
+                    <td><label for="username">Username</label></td>
+
+                    <td>
+
+                        <input name="username" value='{{username}}' type="text">
+
+                        <span class="error">{{username_error}}</span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td><label for="password">Password</label></td>
+
+                    <td>
+
+                        <input name="password" type="password">
+
+                        <span class="error">{{password_error}}</span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td><label for="verify">Verify Password</label></td>
+
+                    <td>
+
+                        <input name="verify" type="password">
+
+                        <span class="error">{{verify_error}}</span>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td><label for="email">Email (optional)</label></td>
+
+                    <td>
+
+                        <input name="email" value='{{email}}'>
+
+                        <span class="error">{{email_error}}</span>
+
+                    </td>
+
+                </tr>
+
+            </tbody></table>
+
+            <input type="submit">
+
+        </form>
+
+    
+
+
+
+         
+
+    </body>
+
+</html>
+{% endblock %}   
